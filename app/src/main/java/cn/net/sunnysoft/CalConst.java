@@ -14,4 +14,6 @@ public class CalConst {
     public static final int TEXT_STROKE_WIDTH = 2;
     public static final int FRAME_STROKE_WIDTH = 1; // today frame
     public static final int FRAME_GAP = 2; // pixels
+
+    public static final int MONTHS_SPAN = 3 * 12;
 }

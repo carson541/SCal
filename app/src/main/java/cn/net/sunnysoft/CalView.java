@@ -14,12 +14,13 @@ public class CalView extends View {
     private final static String TAG = "CalView";
 
     private Context mContext;
-    private CalController mCalController;
+    // private CalController mCalController;
+    private CalMonth mCalMonth;
     private CalSpec mCalSpec;
+    private int mFontSize;
 
     public CalView(Context context) {
         super(context);
-
 
         init(context);
     }
@@ -44,8 +45,10 @@ public class CalView extends View {
 
     private void init(Context context) {
         mContext = context;
-        mCalController = CalController.getInstance();
+        // mCalController = CalController.getInstance();
+        mCalMonth = new CalMonth();
         mCalSpec = new CalSpec();
+        mFontSize = CalConst.FONT_SIZE_DEFAULT;
     }
 
     @Override
@@ -57,8 +60,8 @@ public class CalView extends View {
         Log.d(TAG, "onMeasure, d = " + d);
 
         doCalculation(mCalSpec, d, d);
-        Log.d(TAG, "(x1,y1) = " + "(" + mCalSpec.get_x1() + "," + mCalSpec.get_y1() + ")");
-        Log.d(TAG, "w = " + mCalSpec.get_w());
+        // Log.d(TAG, "(x1,y1) = " + "(" + mCalSpec.get_x1() + "," + mCalSpec.get_y1() + ")");
+        // Log.d(TAG, "w = " + mCalSpec.get_w());
 
         setMeasuredDimension(d, d);
     }
@@ -136,7 +139,7 @@ public class CalView extends View {
             paint.getTextBounds(boundtext, 0, boundtext.length(), bounds);
             int width = bounds.right - bounds.left;
 
-            Log.d(TAG, "i = " + i + ", w = " + width + ", h = " + height);
+            // Log.d(TAG, "i = " + i + ", w = " + width + ", h = " + height);
 
             if (height + CalConst.FONT_SIZE_GAP >= mCalSpec.get_h()) {
                 fontSize = i;
@@ -144,6 +147,7 @@ public class CalView extends View {
                 break;
             }
         }
+        mFontSize = fontSize;
 
         paint.setColor(Color.WHITE);
         paint.setTextAlign(Paint.Align.CENTER);
@@ -161,7 +165,7 @@ public class CalView extends View {
                 int x = mCalSpec.get_x1() + j * w;
                 int y = mCalSpec.get_y1() + i * h;
 
-                DayInfo[][] dayinfos = mCalController.getDayInfos();
+                DayInfo[][] dayinfos = mCalMonth.getDayInfos();
                 DayInfo dayInfo = dayinfos[i][j];
                 String text = String.valueOf(dayInfo.getDay());
 
@@ -187,7 +191,7 @@ public class CalView extends View {
             int x = mCalSpec.get_x1() + i * w;
             int y = mCalSpec.get_y1();
 
-            String[] text = mCalController.getWeekText(getContext());
+            String[] text = mCalMonth.getWeekText(getContext());
 
             float baseline = y + h / 2 + distance;
 
@@ -199,15 +203,23 @@ public class CalView extends View {
         {
             int x = mCalSpec.get_X() / 2;
             int y = (int)(mCalSpec.get_y1() - (fontMetris.bottom - fontMetris.top) / 2 + distance);
-            String text = mCalController.getMonthYearText(getContext());
+            String text = mCalMonth.getMonthYearText(getContext());
+            canvas.drawText(text, x, y, paint);
+        }
+
+        /* back today text */
+        if (!mCalMonth.isThisMonth()) {
+            int x = mCalSpec.get_X() / 2;
+            int y = (int)(mCalSpec.get_y2() + (fontMetris.bottom - fontMetris.top) / 2 + distance);
+            String text = getContext().getResources().getString(R.string.back_today);
             canvas.drawText(text, x, y, paint);
         }
 
         /* today */
-        if (mCalController.getTodayPos() != -1) {
-            int pos = mCalController.getTodayPos();
-            int i = pos / CalConst.DAYS_OF_WEEK;
-            int j = pos % CalConst.DAYS_OF_WEEK;
+        int todayPos = mCalMonth.getTodayPos();
+        if (todayPos != -1) {
+            int i = todayPos / CalConst.DAYS_OF_WEEK;
+            int j = todayPos % CalConst.DAYS_OF_WEEK;
             int w = mCalSpec.get_w();
             int h = mCalSpec.get_h();
             int x = mCalSpec.get_x1() + j * w;
@@ -236,5 +248,54 @@ public class CalView extends View {
 
     private void updateGUI() {
         this.invalidate();
+    }
+
+    public void setYear(int year) {
+        Log.d(TAG, "setYear to " + year);
+
+        mCalMonth.setYear(year);
+    }
+
+    public void setMonth(int month) {
+        Log.d(TAG, "setMonth to " + month);
+
+        mCalMonth.setMonth(month);
+
+        // this.invalidate();
+    }
+
+    public void onClick(float x, float y, LoopRecyclerView recyclerView) {
+        Log.d(TAG, "onClick(" + x + "," + y + ")");
+
+        if (isPointInBackTodayBox(x, y) &&
+            !mCalMonth.isThisMonth()) {
+            Log.d(TAG, "call back this month");
+
+            recyclerView.gotoStartPosition();
+        }
+    }
+
+    private boolean isPointInBackTodayBox(float x, float y) {
+        String boundtext = getContext().getResources().getString(R.string.back_today);
+        Rect bounds = new Rect();
+        Paint paint = new Paint();
+        paint.setTextSize(mFontSize);
+        paint.getTextBounds(boundtext, 0, boundtext.length(), bounds);
+        int width = bounds.right - bounds.left;
+        int GAP = 5;
+
+        int x1 = mCalSpec.get_X() / 2 - width / 2 - GAP;
+        int x2 = mCalSpec.get_X() / 2 + width / 2 + GAP;
+        int y1 = mCalSpec.get_y2();
+        int y2 = mCalSpec.get_y2() + mCalSpec.get_h();
+
+        Log.d(TAG, "back today[(" + x1 + "," + y1 + ")-(" + x2 + "," + y2 + ")]");
+
+        if (x < x1) return false;
+        if (x > x2) return false;
+        if (y < y1) return false;
+        if (y > y2) return false;
+
+        return true;
     }
 }

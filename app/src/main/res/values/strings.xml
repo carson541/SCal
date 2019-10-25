@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SCal</string>
+    <string name="back_today">Back Today</string>
 </resources>
