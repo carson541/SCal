@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "cn.net.sunnysoft"
+        applicationId "cn.net.sunnysoft.scal"
         minSdkVersion 28
         targetSdkVersion 29
         versionCode 1

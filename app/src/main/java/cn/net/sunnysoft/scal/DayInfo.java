@@ -1,4 +1,4 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 public class DayInfo {
     public static final int CURRENT_MONTH = 1;

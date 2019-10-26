@@ -1,4 +1,4 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 public class CalBean {
     private int mYear;

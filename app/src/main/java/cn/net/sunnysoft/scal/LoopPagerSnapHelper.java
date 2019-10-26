@@ -1,8 +1,6 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class LoopPagerSnapHelper extends PagerSnapHelper {
     private final static String TAG = "LoopPagerSnapHelper";
 
-    OnPageListener mOnPageListener;
-    int mCurrentPosition = 0;
+    private OnPageListener mOnPageListener;
+    private int mCurrentPosition = 0;
 
     public int getCurrentPosition() {
         return mCurrentPosition;

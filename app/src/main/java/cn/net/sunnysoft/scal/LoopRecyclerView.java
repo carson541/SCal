@@ -1,4 +1,4 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,11 +7,11 @@ import android.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LoopRecyclerView extends RecyclerView {
     private final static String TAG = "LoopRecyclerView";
-    int mStartPosition;
+
+    private int mStartPosition;
 
     public LoopRecyclerView(Context context) {
         super(context);
@@ -32,6 +32,7 @@ public class LoopRecyclerView extends RecyclerView {
     }
     
     private void init(Context context) {
+        mStartPosition = 0;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class LoopRecyclerView extends RecyclerView {
         super.setAdapter(adapter);
 
         int position = getAdapter().getItemRawCount() / 2;
-        Log.d(TAG, "setAdapter, position = " + position);
+        Log.d(TAG, "setAdapter, start position = " + position);
 
         mStartPosition = position;
 
@@ -78,7 +79,6 @@ public class LoopRecyclerView extends RecyclerView {
 
         @Override
         final public void onBindViewHolder(T holder, int position) {
-            // onBindLoopViewHolder(holder, position % getItemRawCount());
             onBindLoopViewHolder(holder, position);
         }
 
@@ -87,12 +87,6 @@ public class LoopRecyclerView extends RecyclerView {
         @Override
         final public int getItemCount() {
             int rawCount = getItemRawCount();
-
-            // if (rawCount > 0) {
-            //     return Integer.MAX_VALUE;
-            // }
-
-            // return 0;
 
             return rawCount;
         }

@@ -1,4 +1,4 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,7 +14,6 @@ public class CalView extends View {
     private final static String TAG = "CalView";
 
     private Context mContext;
-    // private CalController mCalController;
     private CalMonth mCalMonth;
     private CalSpec mCalSpec;
     private int mFontSize;
@@ -45,7 +44,6 @@ public class CalView extends View {
 
     private void init(Context context) {
         mContext = context;
-        // mCalController = CalController.getInstance();
         mCalMonth = new CalMonth();
         mCalSpec = new CalSpec();
         mFontSize = CalConst.FONT_SIZE_DEFAULT;
@@ -234,22 +232,6 @@ public class CalView extends View {
         super.onDraw(canvas);
     }
 
-    private Handler mHandler = new Handler();
-
-    private Runnable doUpdateGUI = new Runnable() {
-        public void run() {
-            updateGUI();
-        }
-    };
-
-    public void update() {
-        mHandler.post(doUpdateGUI);
-    }
-
-    private void updateGUI() {
-        this.invalidate();
-    }
-
     public void setYear(int year) {
         Log.d(TAG, "setYear to " + year);
 
@@ -260,8 +242,6 @@ public class CalView extends View {
         Log.d(TAG, "setMonth to " + month);
 
         mCalMonth.setMonth(month);
-
-        // this.invalidate();
     }
 
     public void onClick(float x, float y, LoopRecyclerView recyclerView) {
@@ -282,12 +262,12 @@ public class CalView extends View {
         paint.setTextSize(mFontSize);
         paint.getTextBounds(boundtext, 0, boundtext.length(), bounds);
         int width = bounds.right - bounds.left;
-        int GAP = 5;
+        int GAP = 10;
 
         int x1 = mCalSpec.get_X() / 2 - width / 2 - GAP;
         int x2 = mCalSpec.get_X() / 2 + width / 2 + GAP;
         int y1 = mCalSpec.get_y2();
-        int y2 = mCalSpec.get_y2() + mCalSpec.get_h();
+        int y2 = mCalSpec.get_y2() + mCalSpec.get_h() + GAP;
 
         Log.d(TAG, "back today[(" + x1 + "," + y1 + ")-(" + x2 + "," + y2 + ")]");
 

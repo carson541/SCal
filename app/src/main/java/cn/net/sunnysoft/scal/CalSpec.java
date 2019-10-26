@@ -1,4 +1,4 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 public class CalSpec {
     private int X, Y;

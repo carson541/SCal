@@ -1,13 +1,11 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,11 +17,9 @@ public class MainActivity extends WearableActivity {
     private final static String TAG = "SCal";
 
     private CalController mCalController;
-    // private CalView mCalView;
-
     private LoopRecyclerView mRecyclerView;
     private LoopAdapter mAdapter;
-    private ArrayList<CalBean> mDatas;
+    private ArrayList<CalBean> mDatas = null;
     private GestureDetector mGestureDetector;
 
     @Override
@@ -36,10 +32,7 @@ public class MainActivity extends WearableActivity {
 
         Log.d(TAG, "onCreate");
 
-        initDatas();
-
         mCalController = CalController.getInstance();
-        // mCalView = (CalView) this.findViewById(R.id.calview);
 
         mRecyclerView = (LoopRecyclerView) findViewById(R.id.recyclerview);
 
@@ -54,27 +47,15 @@ public class MainActivity extends WearableActivity {
                 public void onPageSelector(int position) {
                     Log.d(TAG, "onPageSelector: " + position);
 
-                    int year = mDatas.get(position).getYear();
-                    int month = mDatas.get(position).getMonth();
-                    mCalController.setYear(year);
-                    mCalController.setMonth(month);
+                    if (mDatas != null) {
+                        int year = mDatas.get(position).getYear();
+                        int month = mDatas.get(position).getMonth();
+                        mCalController.setYear(year);
+                        mCalController.setMonth(month);
+                    }
                 }
             });
         snapHelper.attachToRecyclerView(mRecyclerView);
-
-        mAdapter = new LoopAdapter();
-        mAdapter.setDatas(mDatas);
-        mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                if (mGestureDetector.onTouchEvent(e)) {
-                    return true;
-                }
-                return false;
-            }
-        });
 
         mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
@@ -93,6 +74,18 @@ public class MainActivity extends WearableActivity {
                 return super.onSingleTapConfirmed(e);
             }
         });
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                if (mGestureDetector.onTouchEvent(e)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mAdapter = new LoopAdapter();
     }
 
     @Override
@@ -102,7 +95,11 @@ public class MainActivity extends WearableActivity {
         Log.d(TAG, "onResume");
 
         mCalController.update();
-        // mCalView.update();
+
+        initDatas();
+
+        mAdapter.setDatas(mDatas);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void initDatas() {

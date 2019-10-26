@@ -9,10 +9,10 @@
     tools:context=".MainActivity"
     tools:deviceIds="wear">
 
-    <cn.net.sunnysoft.LoopRecyclerView
+    <cn.net.sunnysoft.scal.LoopRecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </cn.net.sunnysoft.LoopRecyclerView>
+    </cn.net.sunnysoft.scal.LoopRecyclerView>
 
 </androidx.wear.widget.BoxInsetLayout>

@@ -1,9 +1,8 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 import android.content.Context;
 import android.util.Log;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -36,7 +35,7 @@ public class CalMonth {
         mCalController = CalController.getInstance();
     }
 
-    public void update() {
+    private void update() {
         Log.d(TAG, "update");
 
         DayInfo[][] dayinfos = new DayInfo[CalConst.COLS_OF_MONTH]

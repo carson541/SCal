@@ -1,4 +1,4 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 public class CalConst {
     public static final int DAYS_OF_WEEK = 7;

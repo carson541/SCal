@@ -1,11 +1,11 @@
-package cn.net.sunnysoft;
+package cn.net.sunnysoft.scal;
 
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 public class LoopViewHolder extends RecyclerView.ViewHolder {
-    CalView calview;
+    public CalView calview;
 
     public LoopViewHolder(View view) {
         super(view);
